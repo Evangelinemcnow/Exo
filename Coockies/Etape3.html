@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        button {
+            margin: 10px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+
+    <script defer>
+        // 🔹 Vérifier que l'utilisateur est bien connecté
+        if (!sessionStorage.getItem("username")) {
+            window.location.href = "index.html";
+        }
+
+        // 🔹 Récupération du nom d'utilisateur depuis sessionStorage
+        const username = sessionStorage.getItem("username");
+
+        // 🔹 Récupération de la date du cookie
+        const cookies = document.cookie.split("; ");
+        const dateCookie = cookies.find(c => c.startsWith("dateCreation="));
+        const dateCreation = dateCookie
+            ? new Date(dateCookie.split("=")[1]).toLocaleString("fr-FR", {
+                dateStyle: "full",
+                timeStyle: "short"
+            })
+            : "inconnue";
+
+        // 🔹 Quand la page est chargée
+        window.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("username").textContent = username || "inconnu";
+            document.getElementById("date").textContent = dateCreation;
+        });
+
+        // === 🔸 Bouton Se déconnecter ===
+        function logout() {
+            sessionStorage.clear();
+            document.cookie = "dateCreation=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = "index.html";
+        }
+
+        // === 🔸 Bouton Clean Cookie ===
+        function cleanCookie() {
+            document.cookie = "dateCreation=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            alert("🍪 Cookie supprimé !");
+            location.reload(); // recharge la page pour mettre à jour l'affichage
+        }
+
+        // === 🔸 Bouton Clean Session ===
+        function cleanSession() {
+            sessionStorage.clear();
+            alert("🧹 SessionStorage vidé !");
+            location.reload();
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Bienvenue <span id="username"></span></h1>
+    <p>Ton cookie a été créé le : <span id="date"></span></p>
+
+    <button onclick="logout()">Se déconnecter</button>
+    <button onclick="cleanCookie()">Supprime le coockie</button>
+    <button onclick="cleanSession()">Supprime la session</button>
+</body>
+
+</html>
